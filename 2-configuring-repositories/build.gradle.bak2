@@ -1,0 +1,28 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repo.spring.io/release"
+    }
+    maven {
+        url "https://repository.jboss.org/maven2"
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = 'localRepo'
+            }
+        }
+        filter {
+            // this repository *only* contains artifacts with group "info.perezalcolea"
+            includeGroup "info.perezalcolea"
+        }
+    }
+}
+dependencies {
+    implementation 'com.google.guava:guava:29.0-jre'
+    implementation 'info.perezalcolea:bestlibrary:latest.release'
+}

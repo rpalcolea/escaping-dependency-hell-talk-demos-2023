@@ -1,0 +1,28 @@
+plugins {
+    // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
+    id 'java-gradle-plugin'
+    id 'groovy'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+}
+
+gradlePlugin {
+    plugins {
+        greeting {
+            id = 'info.perezalcolea.dependencies-opinions'
+            implementationClass = 'info.perezalcolea.DependenciesOpinionsPlugin'
+        }
+    }
+}
+
+tasks.named('test') {
+    // Use JUnit Jupiter for unit tests.
+    useJUnitPlatform()
+}

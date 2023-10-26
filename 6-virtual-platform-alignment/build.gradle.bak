@@ -1,0 +1,40 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = 'localRepo'
+            }
+        }
+        filter {
+            // this repository *only* contains artifacts with group "info.perezalcolea"
+            includeGroup "info.perezalcolea"
+            includeGroup "com.netflix"
+        }
+    }
+}
+
+abstract class MyAlignmentRule implements ComponentMetadataRule {
+    void execute(ComponentMetadataContext ctx) {
+        ctx.details.with {
+            if (id.group.startsWith("info.perezalcolea")) {
+                // declare that Perezalcolea modules all belong to the virtual platform
+                belongsTo("info.perezalcolea:perezalcolea-virtual-platform:${id.version}")
+            }
+        }
+    }
+}
+
+dependencies {
+    components.all(MyAlignmentRule)
+    implementation 'info.perezalcolea:bestservice-client:1.0.0'
+    implementation 'com.netflix:bestlibrary:1.0.0'
+}
+
+tasks.named('test').configure {
+    useJUnitPlatform()
+}

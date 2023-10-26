@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = 'localRepo'
+            }
+        }
+        filter {
+            // this repository *only* contains artifacts with group "info.perezalcolea"
+            includeGroup "info.perezalcolea"
+        }
+    }
+}
+
+class JavassistCapability implements ComponentMetadataRule {
+    void execute(ComponentMetadataContext context) {
+        context.details.with {
+            if (id.group == "javassist" && id.name == "javassist") {
+                allVariants {
+                    it.withCapabilities {
+                        // Declare that javassist provides the org.javassist capability, but with an older version
+                        it.addCapability("org.javassist", "javassist", id.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+configurations.all {
+    resolutionStrategy.capabilitiesResolution.withCapability("org.javassist:javassist") {
+        def toBeSelected = candidates.find { it.id instanceof ModuleComponentIdentifier && it.id.group == 'org.javassist' && it.id.module == 'javassist' }
+        if (toBeSelected != null) {
+            select(toBeSelected)
+        }
+        because 'org.javassist over javassist groupID'
+    }
+}
+
+dependencies {
+    components.all(JavassistCapability)
+    implementation 'org.javassist:javassist:3.29.2-GA'
+    implementation 'info.perezalcolea:bestservice-client:1.0.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+tasks.named('test').configure {
+    useJUnitPlatform()
+}

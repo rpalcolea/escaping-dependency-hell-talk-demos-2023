@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.15.3')
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-guava'
+}
+
+tasks.named('test').configure {
+    useJUnitPlatform()
+}

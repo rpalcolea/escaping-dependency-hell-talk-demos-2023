@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = 'localRepo'
+            }
+        }
+        filter {
+            // this repository *only* contains artifacts with group "info.perezalcolea"
+            includeGroup "info.perezalcolea"
+            includeGroup "com.netflix"
+        }
+    }
+}
+
+
+dependencies {
+    implementation 'info.perezalcolea:bestservice-client:1.0.0'
+    implementation 'info.perezalcolea:bestlibrary:1.0.0'
+}
+
+tasks.named('test').configure {
+    useJUnitPlatform()
+}
